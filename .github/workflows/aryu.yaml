@@ -7,34 +7,29 @@ on:
 
 jobs:
   deploymycode:
-    name: "deploy my code to my server"
+    name: Deploy my code to my server
     runs-on: ubuntu-latest
-    env:
-      SERVER_IP: ${{vars.SERVER_IP}}
-    steps:
-      - uses: actions/checkout@v4 
-      #with:
-      #   fetch-depth: 0
 
-      - name: "Configure SSH"
+    env:
+      SERVER_IP: ${{ vars.SERVER_IP }}
+      SSH_KEY64: ${{ secrets.SSH_KEY64 }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-          cat ~/.ssh/config
-          touch ~/.ssh/known_hosts
-          chmod 600 ~/.ssh/known_hosts
+          echo -e "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+          chmod 600 ~/.ssh/config
 
-
-      - name: "SSH Key Access"
+      - name: Setup SSH key
         run: |
-          touch cicd.pem
-          echo $SSH_KEY64 | base64 -d > mykey.pem && chmod 400 cicd.pem
-          ssh-keygen -R $SERVER_IP
-        
-        env:
-          $SSH_KEY64: ${{ secrets.SSH_KEY64 }}
+          echo "$SSH_KEY64" | base64 -d > cicd.pem
+          chmod 400 cicd.pem
+          ssh-keygen -R $SERVER_IP || true
 
-      - name: "Deploy the code to my server"
+      - name: Deploy the code to my server
         run: |
-          ssh -t ubuntu@SERVER_IP -i cicd.pem 'cd /var/www/htm && git pull origin main'
+          ssh -i cicd.pem ubuntu@$SERVER_IP "cd /var/www/html && git pull origin main"
