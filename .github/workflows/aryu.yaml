@@ -27,7 +27,7 @@ jobs:
       - name: Setup SSH key
         run: |
           echo "$SSH_KEY64" | base64 -d > cicd.pem
-          chmod 400 cicd.pem
+          chmod 400 cicdkey.pem
           ssh-keygen -R $SERVER_IP || true
 
       - name: Deploy the code to my server
