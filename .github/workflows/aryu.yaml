@@ -1,6 +1,6 @@
 name: "Update index.html in my server"
 on:
-  workflow_dispatch
+  workflow_dispatch:
   #push:
    #branches:
       #- main
