@@ -21,7 +21,7 @@ pipeline {
                 mkdir -p ~/.ssh
                 chmod 700 ~/.ssh
 
-                echo -e "Host *\\n\\tStrictHostKeyChecking no\\n\\n" > ~/.ssh/config
+                echo -e "Host *\\n\\tStrictHostKeyChecking no\\n\\n" > /var/lib/jenkins/ .ssh/config
                 chmod 600 ~/.ssh/config
 
                 touch ~/.ssh/known_hosts
