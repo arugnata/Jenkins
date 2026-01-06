@@ -8,7 +8,7 @@ pipeline {
     parameters {
         string(
             name: 'SERVER_IP',
-            defaultValue: '44.223.7.233',
+            defaultValue: '44.222.146.36',
             description: 'Target Server'
         )
     }
